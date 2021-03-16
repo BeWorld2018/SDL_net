@@ -28,6 +28,12 @@
 #include <stdarg.h>
 #endif
 
+#ifdef __MORPHOS__
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/socket.h>
+#endif
+
 const SDLNet_version *SDLNet_Linked_Version(void)
 {
     static SDLNet_version linked_version;
@@ -66,6 +72,7 @@ void SDLNet_SetLastError(int err)
 
 #endif
 
+#ifndef __MORPHOS__
 static char errorbuf[1024];
 
 void SDLCALL SDLNet_SetError(const char *fmt, ...)
@@ -87,6 +94,7 @@ const char * SDLCALL SDLNet_GetError(void)
     return SDL_GetError();
 #endif
 }
+#endif
 
 /* Initialize/Cleanup the network API */
 int  SDLNet_Init(void)
@@ -106,6 +114,13 @@ int  SDLNet_Init(void)
             SDLNet_SetError("Couldn't initialize IBM OS/2 sockets");
             return(-1);
         }
+#elif defined(__MORPHOS__)
+		SocketBase = OpenLibrary("bsdsocket.library", 4);
+		if (!SocketBase)
+		{
+			SDLNet_SetError("Could not open bsdsocket.library\n");
+			return -1;
+		}
 #else
         /* SIGPIPE is generated when a remote socket is closed */
         void (*handler)(int);
@@ -136,6 +151,10 @@ void SDLNet_Quit(void)
         }
 #elif defined(__OS2__) && !defined(__EMX__)
         /* -- nothing */
+#elif defined(__MORPHOS__)
+		if (SocketBase)
+			CloseLibrary(SocketBase);
+		SocketBase = NULL;
 #else
         /* Restore the SIGPIPE handler */
         void (*handler)(int);

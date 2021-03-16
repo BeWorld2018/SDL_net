@@ -367,8 +367,13 @@ extern DECLSPEC void SDLCALL SDLNet_FreeSocketSet(SDLNet_SocketSet set);
 /* Error reporting functions                                           */
 /***********************************************************************/
 
+//#ifdef __MORPHOS__
+//#define SDLNet_SetError	SDL_SetError
+//#define SDLNet_GetError	SDL_GetError
+//#else
 extern DECLSPEC void SDLCALL SDLNet_SetError(const char *fmt, ...);
 extern DECLSPEC const char * SDLCALL SDLNet_GetError(void);
+//#endif
 
 /***********************************************************************/
 /* Inline functions to read/write network data                         */

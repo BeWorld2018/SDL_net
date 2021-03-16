@@ -128,6 +128,12 @@ TCPsocket SDLNet_TCP_Open(IPaddress *ip)
             int dontblock = 1;
             ioctl(sock->channel, FIONBIO, &dontblock);
         }
+#elif defined(__MORPHOS__)
+		{
+		  /* passing a non-zero value, socket mode set non-blocking */
+		  unsigned long mode = 1;
+		  IoctlSocket (sock->channel, FIONBIO, (void *) &mode);
+		}
 #else
 #warning How do we set non-blocking mode on other operating systems?
 #endif
@@ -199,6 +205,13 @@ TCPsocket SDLNet_TCP_Accept(TCPsocket server)
         fcntl(sock->channel, F_SETFL, flags & ~O_NONBLOCK);
     }
 #endif /* WIN32 */
+#ifdef __MORPHOS__
+	{
+	 	/* passing a zero value, socket mode set to block on */
+	    unsigned long mode = 0;
+	    IoctlSocket (sock->channel, FIONBIO, (void*) &mode);
+	}
+#endif /* __MORPHOS__ */
     sock->remoteAddress.host = sock_addr.sin_addr.s_addr;
     sock->remoteAddress.port = sock_addr.sin_port;
 

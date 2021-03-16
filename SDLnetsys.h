@@ -78,16 +78,30 @@ typedef Uint32 socklen_t;
 
 /* System-dependent definitions */
 #ifndef __USE_W32_SOCKETS
+#ifdef __MORPHOS__
+#define closesocket	CloseSocket
+#else
 #ifdef __OS2__
 #define closesocket     soclose
 #else  /* !__OS2__ */
 #define closesocket close
 #endif /* __OS2__ */
+#endif /* __MORPHOS__ */
+
 #define SOCKET  int
 #define INVALID_SOCKET  -1
 #define SOCKET_ERROR    -1
 #endif /* __USE_W32_SOCKETS */
-
+#ifdef __MORPHOS__
+#include <sys/filio.h>
+#include <proto/socket.h>
+#include <net/socketbasetags.h>
+#include <proto/exec.h>
+typedef int socklen_t;
+#define ioctl IoctlSocket
+#define random(x) rand(x)
+#define srandom(x) srand(x)
+#endif
 #ifdef __USE_W32_SOCKETS
 #define SDLNet_GetLastError WSAGetLastError
 #define SDLNet_SetLastError WSASetLastError
