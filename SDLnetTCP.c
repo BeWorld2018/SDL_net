@@ -188,7 +188,11 @@ TCPsocket SDLNet_TCP_Accept(TCPsocket server)
     /* Accept a new TCP connection on a server socket */
     sock_alen = sizeof(sock_addr);
     sock->channel = accept(server->channel, (struct sockaddr *)&sock_addr,
+#ifdef __MORPHOS__
+  								(LONG*)&sock_alen);
+#else	
                                 &sock_alen);
+#endif
     if ( sock->channel == INVALID_SOCKET ) {
         SDLNet_SetError("accept() failed");
         goto error_return;

@@ -173,7 +173,11 @@ UDPsocket SDLNet_UDP_Open(Uint16 port)
 
     /* Get the bound address and port */
     sock_len = sizeof(sock_addr);
+#ifdef __MORPHOS__
+    if ( getsockname(sock->channel, (struct sockaddr *)&sock_addr, (LONG*)&sock_len) < 0 ) {	
+#else
     if ( getsockname(sock->channel, (struct sockaddr *)&sock_addr, &sock_len) < 0 ) {
+#endif
         SDLNet_SetError("Couldn't get socket address");
         goto error_return;
     }
@@ -456,7 +460,11 @@ int SDLNet_UDP_RecvV(UDPsocket sock, UDPpacket **packets)
         packet->status = recvfrom(sock->channel,
                 packet->data, packet->maxlen, 0,
                 (struct sockaddr *)&sock_addr,
+#ifdef __MORPHOS__
+						(LONG*)&sock_len);
+#else
                         &sock_len);
+#endif
         if ( packet->status >= 0 ) {
             packet->len = packet->status;
             packet->address.host = sock_addr.sin_addr.s_addr;

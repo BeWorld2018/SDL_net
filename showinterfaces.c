@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include "SDL.h"
 #include "SDL_net.h"
 
 #define MAX_ADDRESSES   10
@@ -27,6 +28,9 @@ int main(int argc, char *argv[])
     IPaddress addresses[MAX_ADDRESSES];
     int i, count;
 
+	SDL_Init(0);
+	SDLNet_Init();
+	
     count = SDLNet_GetLocalAddresses(addresses, MAX_ADDRESSES);
     SDL_Log("Found %d local addresses", count);
     for ( i = 0; i < count; ++i ) {
@@ -37,5 +41,8 @@ int main(int argc, char *argv[])
             (addresses[i].host >> 24) & 0xFF,
             SDLNet_ResolveIP(&addresses[i]));
     }
-    return 0;
+    
+	SDLNet_Quit();
+	SDL_Quit();
+	return 0;
 }

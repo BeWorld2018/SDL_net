@@ -257,14 +257,14 @@ struct Library *LIB_Open(void)
 
 	if (LibBase->Alloc == 0)
 	{
-		/*if (((SDL2Base = OpenLibrary("sdl2.library",  0)) != NULL))
-		{*/
+		if (((SocketBase = OpenLibrary("bsdsocket.library",  4)) != NULL))
+		{
 			LibBase->Alloc = 1;		
-		/*}
+		}
 		else
 		{
 			goto error;
-		}*/
+		}
 	}
 
 	if ((newbase = AllocVecTaskPooled(MyBaseSize + LibBase->DataSize + 15)) != NULL)
