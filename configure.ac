@@ -27,18 +27,20 @@ AC_SUBST(INTERFACE_AGE)
 AC_SUBST(BINARY_AGE)
 AC_SUBST(VERSION)
 
-# libtool versioning
+dnl libtool versioning
 LT_INIT([win32-dll])
 
 LT_RELEASE=$MAJOR_VERSION.$MINOR_VERSION
 LT_CURRENT=`expr $MICRO_VERSION - $INTERFACE_AGE`
 LT_REVISION=$INTERFACE_AGE
 LT_AGE=`expr $BINARY_AGE - $INTERFACE_AGE`
+LT_EXTRA="" dnl for OS2 dll name
 
 AC_SUBST(LT_RELEASE)
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
+AC_SUBST(LT_EXTRA)
 
 dnl Detect the canonical build and host environments
 AC_CANONICAL_HOST
@@ -76,6 +78,14 @@ case "$host" in
             use_version_rc=true
         fi
         ;;
+    *-*-os2*)
+        # disable static builds on os/2
+        enable_static=no
+        # -DBUILD_SDL is needed for DECLSPEC
+        CFLAGS="$CFLAGS -DBUILD_SDL"
+        # OS/2 does not support a DLL name longer than 8 characters.
+        LT_EXTRA="-os2dllname SDL2net"
+        ;;
 esac
 AM_CONDITIONAL(USE_VERSION_RC, test x$use_version_rc = xtrue)
 
@@ -101,6 +111,64 @@ case "$host" in
         ;;
 esac
 AC_SUBST(INETLIB)
+
+dnl See if GCC's -Wall is supported.
+CheckWarnAll()
+{
+    AC_MSG_CHECKING(for GCC -Wall option)
+    have_gcc_Wall=no
+
+    save_CFLAGS="$CFLAGS"
+    CFLAGS="$save_CFLAGS -Wall"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([int x = 0;])], [have_gcc_Wall=yes])
+    AC_MSG_RESULT($have_gcc_Wall)
+    CFLAGS="$save_CFLAGS"
+
+    if test x$have_gcc_Wall = xyes; then
+        CFLAGS="$CFLAGS -Wall"
+
+dnl Haiku headers use multicharacter constants all over the place. Ignore these warnings when using -Wall.
+        AC_MSG_CHECKING(for necessary GCC -Wno-multichar option)
+        need_gcc_Wno_multichar=no
+        case "$host" in
+            *-*-haiku*)
+                need_gcc_Wno_multichar=yes
+                ;;
+        esac
+        AC_MSG_RESULT($need_gcc_Wno_multichar)
+        if test x$need_gcc_Wno_multichar = xyes; then
+            CFLAGS="$CFLAGS -Wno-multichar"
+        fi
+    fi
+}
+
+dnl See if GCC's -fvisibility=hidden is supported (gcc4 and later, usually).
+CheckVisibilityHidden()
+{
+    AC_MSG_CHECKING(for GCC -fvisibility=hidden option)
+    have_gcc_fvisibility=no
+    case "$host" in
+    *-*-cygwin* | *-*-mingw* | *-*-os2*)
+        AC_MSG_RESULT([ignored for $host_os])
+        return
+        ;;
+    esac
+
+    visibility_CFLAGS="-fvisibility=hidden"
+    save_CFLAGS="$CFLAGS"
+    CFLAGS="$save_CFLAGS $visibility_CFLAGS -Werror"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+    #if !defined(__GNUC__) || __GNUC__ < 4
+    #error SDL only uses visibility attributes in GCC 4 or newer
+    #endif
+    ]],[])], [have_gcc_fvisibility=yes],[])
+    AC_MSG_RESULT($have_gcc_fvisibility)
+    CFLAGS="$save_CFLAGS"
+
+    if test x$have_gcc_fvisibility = xyes; then
+        CFLAGS="$CFLAGS $visibility_CFLAGS"
+    fi
+}
 
 dnl Check for SDL
 SDL_VERSION=2.0.0
@@ -130,8 +198,33 @@ http://www.libsdl.org/projects/GUIlib/
 fi
 AM_CONDITIONAL(HAVE_GUI_LIB, test x$have_GUI = xyes)
 
+dnl check for GCC warning options
+CheckWarnAll
+
+dnl check for GCC visibility attributes
+CheckVisibilityHidden
+
 dnl C++ flags are the same as the C flags
 CXXFLAGS="$CXXFLAGS $CFLAGS"
+
+if test x$enable_shared = xyes; then
+    ENABLE_SHARED_TRUE=
+    ENABLE_SHARED_FALSE="#"
+else
+    ENABLE_SHARED_TRUE="#"
+    ENABLE_SHARED_FALSE=
+fi
+if test x$enable_static = xyes; then
+    ENABLE_STATIC_TRUE=
+    ENABLE_STATIC_FALSE="#"
+else
+    ENABLE_STATIC_TRUE="#"
+    ENABLE_STATIC_FALSE=
+fi
+AC_SUBST(ENABLE_SHARED_TRUE)
+AC_SUBST(ENABLE_SHARED_FALSE)
+AC_SUBST(ENABLE_STATIC_TRUE)
+AC_SUBST(ENABLE_STATIC_FALSE)
 
 AC_SUBST([WINDRES])
 

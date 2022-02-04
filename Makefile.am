@@ -1,4 +1,4 @@
-# Makefile.am for the SDL sample image loading library and viewer
+# Makefile.am for the SDL portable network library
 ACLOCAL_AMFLAGS = -I acinclude
 AUTOMAKE_OPTIONS= foreign
 
@@ -15,7 +15,7 @@ libSDL2_net_la_SOURCES =		\
 	SDLnetselect.c		\
 	SDLnetsys.h
 
-EXTRA_DIST =			\
+EXTRA_DIST = CHANGES.txt COPYING.txt README.txt \
 	Android.mk		\
 	debian			\
 	version.rc		\
@@ -27,10 +27,8 @@ EXTRA_DIST =			\
 	scroll_dn.bmp		\
 	scroll_up.bmp		\
 	SDL2_net.spec		\
-	SDL2_net.spec.in		\
-	gcc-fat.sh		\
-	autogen.sh			\
-	$(srcdir)/*.txt
+	SDL2_net.spec.in	\
+	autogen.sh gcc-fat.sh
 
 if USE_VERSION_RC
 libSDL2_net_la_LDFLAGS = 	\
@@ -43,7 +41,7 @@ else
 libSDL2_net_la_LDFLAGS = 	\
 	-no-undefined		\
 	-release $(LT_RELEASE)	\
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LT_EXTRA)
 libSDL2_net_la_LIBADD = @INETLIB@
 endif
 
