@@ -1,7 +1,7 @@
 # Makefile to build the SDL2_NET library
 
 CDEFS   = -DAROS_ALMOST_COMPATIBLE -DUSE_INLINE_STDARG 
-CC      = ppc-morphos-gcc-10 -noixemul
+CC      = ppc-morphos-gcc-9 -noixemul
 
 INCLUDE = -I/usr/local/include/SDL2
 CFLAGS  = -mcpu=750 -O2 $(INCLUDE) -mresident32 -Wall -Wno-pointer-sign  -fno-strict-aliasing -fschedule-insns2 -ffast-math $(CDEFS)
