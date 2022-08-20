@@ -1,7 +1,7 @@
 # Makefile to build the SDL2_NET library
 
 CDEFS   = -DAROS_ALMOST_COMPATIBLE -DUSE_INLINE_STDARG 
-CC      = ppc-morphos-gcc-9 -noixemul
+CC      = ppc-morphos-gcc-11 -noixemul
 
 INCLUDE = -I/usr/local/include/SDL2
 CFLAGS  = -mcpu=750 -O2 $(INCLUDE) -mresident32 -Wall -Wno-pointer-sign  -fno-strict-aliasing -fschedule-insns2 -ffast-math $(CDEFS)
@@ -68,15 +68,6 @@ $(LIBRARY): $(TARGET) $(COREOBJECTS)
 showinterfaces: showinterfaces.c
 	$(COMPILING)
 	$(CC) -O2 -Wall -o $@ $@.c -I. $(INCLUDE) -DUSE_INLINE_STDARG -LMorphOS/devenv/lib -L/usr/local/lib -lSDL2_net -lSDL2 
-
-test_server: test_server.c
-	$(COMPILING)
-	$(CC) -O2 -Wall -o $@ $@.c -I. $(INCLUDE) -DUSE_INLINE_STDARG -LMorphOS/devenv/lib -L/usr/local/lib -lSDL2_net -lSDL2 
-	
-test_client: test_client.c
-	$(COMPILING)
-	$(CC) -O2 -Wall -o $@ $@.c -I. $(INCLUDE) -DUSE_INLINE_STDARG -LMorphOS/devenv/lib -L/usr/local/lib -lSDL2_net -lSDL2 
-	
 
 clean:
 	rm -f $(LIBRARY) $(TARGET) $(OBJECTS) $(COREOBJECTS) *.db *.s
