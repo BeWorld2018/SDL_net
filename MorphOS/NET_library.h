@@ -21,12 +21,6 @@
 #define __TEXTSEGMENT__
 #endif
 
-struct CTDT
-{
-	int	(*fp)(void);
-	long	priority;
-};
-
 struct HunkSegment
 {
 	unsigned int Size;
@@ -46,7 +40,7 @@ struct SDL2NetLibrary
 	APTR           DataSeg;	   /* DON'T CHANGE POSITION */
 
 	ULONG                    DataSize;
-	struct SDL2NetLibrary *Parent;
+	struct SDL2NetLibrary 	*Parent;
 	BPTR                     SegList;
 	struct ExecBase         *MySysBase;
 	struct DosLibrary       *MyDOSBase;
@@ -60,8 +54,6 @@ struct SDL2NetLibrary
 	// library management
 
 	struct SignalSemaphore Semaphore;
-	APTR ctdtlist;
-	APTR last_ctdt;
 };
 
 #endif /* SDL2_NET_LIBRARY_H */
