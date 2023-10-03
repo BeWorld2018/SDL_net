@@ -1,6 +1,6 @@
 /*
   SDL_net:  An example cross-platform network library for use with SDL
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
   Copyright (C) 2012 Simeon Maxein <smaxein@googlemail.com>
 
   This software is provided 'as-is', without any express or implied
@@ -208,6 +208,43 @@ extern DECLSPEC int SDLCALL SDLNet_GetLocalAddresses(IPaddress *addresses, int m
 typedef struct _TCPsocket *TCPsocket;
 
 /**
+ * Open a server TCP network socket.
+ *
+ * If `ip->host` is INADDR_NONE or INADDR_ANY, the socket is bound to all
+ * interfaces, otherwise it is bound to the specified interface. The address
+ * passed in should already be swapped to network byte order (addresses
+ * returned from SDLNet_ResolveHost() are already in the correct form).
+ *
+ * \param ip The address to host a server on.
+ * \returns the newly created socket, or NULL if there was an error.
+ *
+ * \since This function is available since SDL_net 2.4.0.
+ *
+ * \sa SDLNet_TCP_Close
+ * \sa SDLNet_TCP_OpenClient
+ * \sa SDLNet_TCP_Open
+ */
+extern DECLSPEC TCPsocket SDLCALL SDLNet_TCP_OpenServer(IPaddress *ip);
+
+/**
+ * Open a client TCP network socket.
+ *
+ * Attempt a TCP connection to the remote host and port. The address passed in
+ * should already be swapped to network byte order (addresses returned from
+ * SDLNet_ResolveHost() are already in the correct form).
+ *
+ * \param ip The address to open a connection to.
+ * \returns the newly created socket, or NULL if there was an error.
+ *
+ * \since This function is available since SDL_net 2.4.0.
+ *
+ * \sa SDLNet_TCP_Close
+ * \sa SDLNet_TCP_OpenServer
+ * \sa SDLNet_TCP_Open
+ */
+extern DECLSPEC TCPsocket SDLCALL SDLNet_TCP_OpenClient(IPaddress *ip);
+
+/**
  * Open a TCP network socket.
  *
  * If `ip->host` is INADDR_NONE or INADDR_ANY, this creates a local server
@@ -222,6 +259,8 @@ typedef struct _TCPsocket *TCPsocket;
  * \since This function is available since SDL_net 2.0.0.
  *
  * \sa SDLNet_TCP_Close
+ * \sa SDLNet_TCP_OpenServer
+ * \sa SDLNet_TCP_OpenClient
  */
 extern DECLSPEC TCPsocket SDLCALL SDLNet_TCP_Open(IPaddress *ip);
 
@@ -598,7 +637,7 @@ extern DECLSPEC IPaddress * SDLCALL SDLNet_UDP_GetPeerAddress(UDPsocket sock, in
  *
  * \since This function is available since SDL_net 2.0.0.
  *
- * \sa SDLNet_UDP_RecV
+ * \sa SDLNet_UDP_RecvV
  */
 extern DECLSPEC int SDLCALL SDLNet_UDP_SendV(UDPsocket sock, UDPpacket **packets, int npackets);
 

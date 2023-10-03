@@ -1,6 +1,6 @@
 /*
   SDL_net:  An example cross-platform network library for use with SDL
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,7 +22,7 @@
 #include "SDLnetsys.h"
 #include "SDL_net.h"
 
-#if defined(__WIN32__) || defined(__OS2__)
+#if defined(__WIN32__) || defined(__WINRT__) || defined(__OS2__)
 #define srandom srand
 #define random  rand
 #endif

@@ -1,6 +1,6 @@
 /*
   SDL_net:  An example cross-platform network library for use with SDL
-  Copyright (C) 1997-2022 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -48,7 +48,9 @@
 #ifdef __FreeBSD__
 #include <sys/socket.h>
 #endif
+#ifndef __vita__
 #include <sys/ioctl.h>
+#endif
 #include <sys/time.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -58,7 +60,7 @@
 #endif
 #include <netinet/tcp.h>
 #include <sys/socket.h>
-#ifndef __PSP__
+#if !defined (__PSP__) && !defined (__vita__)
 #include <net/if.h>
 #endif
 #include <netdb.h>
