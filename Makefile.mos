@@ -22,7 +22,7 @@ HEADERING = @$(ECHE) "creating headers files $(BOLD)$@$(NRML)..."
 TARGET  = libSDL2_net.a
 LIBRARY = sdl2_net.library
 
-SOURCES = SDLnet.o  SDLnetTCP.o  SDLnetUDP.o  SDLnetselect.o	
+SOURCES = src/SDLnet.o src/SDLnetTCP.o src/SDLnetUDP.o src/SDLnetselect.o	
 		
 CORESOURCES = MorphOS/*.c
 COREOBJECTS = $(shell echo $(CORESOURCES) | sed -e 's,\.c,\.o,g')
@@ -38,7 +38,7 @@ sdk: sdklibs
 	mkdir -p /usr/local/include/SDL2
 	mkdir -p /usr/local/lib
 	mkdir -p /usr/local/lib/libb32
-	cp SDL_net.h /usr/local/include/SDL2/SDL_net.h
+	cp include/SDL_net.h /usr/local/include/SDL2/SDL_net.h
 	cp MorphOS/devenv/lib/libSDL2_net.a  /usr/local/lib/libSDL2_net.a
 	cp MorphOS/devenv/lib/libb32/libSDL2_net.a  /usr/local/lib/libb32/libSDL2_net.a
 

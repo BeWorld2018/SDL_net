@@ -43,7 +43,8 @@ int SDLNet_AddSocket(SDLNet_SocketSet set, SDLNet_GenericSocket sock);
 int SDLNet_DelSocket(SDLNet_SocketSet set, SDLNet_GenericSocket sock);
 int SDLNet_CheckSockets(SDLNet_SocketSet set, Uint32 timeout);
 void SDLNet_FreeSocketSet(SDLNet_SocketSet set);
-
+TCPsocket SDLNet_TCP_OpenServer(IPaddress *ip);
+TCPsocket SDLNet_TCP_OpenClient(IPaddress *ip);
 #ifdef __cplusplus
 }
 #endif

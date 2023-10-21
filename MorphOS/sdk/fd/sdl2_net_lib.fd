@@ -35,4 +35,6 @@ SDLNet_AddSocket(set,sock)(sysv,r12base)
 SDLNet_DelSocket(set,sock)(sysv,r12base)
 SDLNet_CheckSockets(set,timeout)(sysv,r12base)
 SDLNet_FreeSocketSet(set)(sysv,r12base)
+SDLNet_TCP_OpenServer(ip)(sysv,r12base)
+SDLNet_TCP_OpenClient(ip)(sysv,r12base)
 ##end

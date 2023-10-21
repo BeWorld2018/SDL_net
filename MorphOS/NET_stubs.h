@@ -61,3 +61,5 @@
 	STUB(SDLNet_DelSocket)
 	STUB(SDLNet_CheckSockets)
 	STUB(SDLNet_FreeSocketSet)
+	STUB(SDLNet_TCP_OpenClient)
+	STUB(SDLNet_TCP_OpenServer)
