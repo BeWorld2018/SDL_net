@@ -1,6 +1,6 @@
 /*
   SDL_net:  An example cross-platform network library for use with SDL
-  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
   Copyright (C) 2012 Simeon Maxein <smaxein@googlemail.com>
 
   This software is provided 'as-is', without any express or implied
@@ -293,10 +293,12 @@ int SDLNet_GetLocalAddresses(IPaddress *addresses, int maxcount)
     }
 
     if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == ERROR_BUFFER_OVERFLOW) {
-        pAdapterInfo = (IP_ADAPTER_INFO *) SDL_realloc(pAdapterInfo, ulOutBufLen);
-        if (pAdapterInfo == NULL) {
+        PIP_ADAPTER_INFO pAdapterInfoTmp = (PIP_ADAPTER_INFO) SDL_realloc(pAdapterInfo, ulOutBufLen);
+        if (pAdapterInfoTmp == NULL) {
+            SDL_free(pAdapterInfo);
             return 0;
         }
+        pAdapterInfo = pAdapterInfoTmp;
         dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen);
     }
 
