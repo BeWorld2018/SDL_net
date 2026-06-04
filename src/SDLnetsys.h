@@ -1,6 +1,6 @@
 /*
   SDL_net:  An example cross-platform network library for use with SDL
-  Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2026 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -70,7 +70,7 @@
 #include <sys/select.h> /* for FD_SET, etc */
 #endif
 
-#ifdef __OS2__
+#if defined(__OS2__) && !(defined(__INNOTEK_LIBC__) || defined(__KLIBC__))
 typedef int socklen_t;
 #elif defined(__USE_W32_SOCKETS) && !defined(IP_MSFILTER_SIZE)
 typedef int socklen_t;
